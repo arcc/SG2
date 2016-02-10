@@ -5,7 +5,7 @@ import urllib
 import os
 
 urlbase = 'http://eol.jsc.nasa.gov/DatabaseImages/ESC'
-
+infopage = 'http://eol.jsc.nasa.gov/SearchPhotos/photo.pl?'
 class ASTRO_IMG(object):
     """This is a class for astronaut image information.
     """
@@ -16,6 +16,7 @@ class ASTRO_IMG(object):
         else:
             self.mission = mission
         self.image_url = self.get_url()
+        self.page_url = self.get_page_url()
         self.img_category = None
 
 
@@ -44,6 +45,15 @@ class ASTRO_IMG(object):
         url = urlbase + size + self.mission + '/' + self.image_id + '.JPG'
         return url
 
+    def get_page_url(self):
+        """This is a function that get image information page url.
+        """
+        mission_part = 'mission=' + self.mission
+        id_num = self.image_id.split('-')[2]
+        id_part = 'roll=E&frame=' + id_num
+        page_url = infopage + mission_part + '&' + id_part
+        return page_url
+        
     # This secret discovered by Aldo
     def download_image(self, download_path=None):
         """Save the image from url.
