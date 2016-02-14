@@ -1,2 +1,1 @@
-#SG2 project. UTRGV. 
-Added Aldo's Brancsdlkjfh
+#G2 project. UTRGV. 
