@@ -14,9 +14,12 @@ print imid
 
 for i in imid:
     im = ASTRO_IMG(i)
+    im.download_image()
     print im.page_url
     im.get_image_info()
     print im.image_info
     im.translate_info_as_data()
     for name in im.info_list:
         print name, getattr(im,name)
+
+imagefile.get_simple_file_format('testsimple.dat')
