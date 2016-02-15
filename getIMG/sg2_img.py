@@ -40,11 +40,6 @@ class ASTRO_IMG(object):
                            'Time taken': ''}
 
         self.img_category = None
-        self.category_list = ['Astronomical Objects', 'Atmospheric Limb',
-                              'Aurora', 'Blank', 'Camera Malfunction',
-                              'Clouds', 'Dark Earthobs', 'Earth Limb',
-                              'Light Earthobs', 'Non Earthobs', 'Not Specified',
-                              'Partial Frame', 'Unfocused Earthobs']
         self.get_image_info()
         self.info_list = ['nadir', 'photo_center', 'focal_length',
                           'time_taken', 'img_category', 'spacecraft_alt']

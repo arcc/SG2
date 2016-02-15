@@ -1,6 +1,6 @@
 # This is an example code for reading the SG2 image list.
 
-class image_list_file(object):
+class image_list(object):
     def __init__(self, filename): # The file name is an input argument.
         self.filename = filename
         self.image_list = None # set image list. Set is as None type
@@ -40,6 +40,6 @@ class image_list_file(object):
         for ii in range(1, self.num_images+1):
             result_id_str = self.image_list[ii].split() # Get the string from data list, and split from the space
             result_id = result_id_str[1].split('.')[0]
-            out_string = result_id[7:] + ' ' + result_id_str[0] + '\n'
+            out_string = result_id[7:] + ' ' + result_id_str[0].strip(',') + '\n'
             f.write(out_string)
         f.close()
