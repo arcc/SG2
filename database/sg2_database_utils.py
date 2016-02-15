@@ -4,7 +4,7 @@ import os.path
 
 
 class image_database(object): # API to interact with database
-    def __init__(self, local=True, user='root', password='root', host='localhost',
+    def __init__(self, local=True, user='root', password='****', host='localhost',
                  port='8889', database='sg2image',
                  unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock'):
                   # right now it is only support localhost via MAMP
