@@ -20,6 +20,7 @@ class image_database(object): # API to interact with database
                              "  `image_ID` varchar(20) NOT NULL,"
                              "  `mission` varchar(20) NOT NULL,"
                              "  `other` varchar(40) NOT NULL,"
+                             "  `number_categoried` int(11) NOT NULL,"
                              "  `catelog_result` varchar(40) NOT NULL,"
                              "  `quality_control` TINYINT(1) NOT NULL,"
                              "  PRIMARY KEY (`image_index`)"

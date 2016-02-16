@@ -9,13 +9,16 @@ db = image_database(password='root')
 
 imc = image_category( db, user1, 'sg2_category_test')
 
+
 if not imc.check_data_table('sg2_category_test'):
+    #print imc.check_data_table('sg2_category_test')
     imc.create_data_table('sg2_category_test')
 
 imc.change_data_table('sg2_category_test')
-img_list_file = '/Users/jingluo/Research_codes/sg2/database/test_upload.dat'
+
+#img_list_file = '/Users/jingluo/Research_codes/sg2/database/test_upload.dat'
 #imc.database.load_image_list_file(imc.data_table, img_list_file, ' ', '\n',
-                                 # ['image_ID', 'mission']) # Put this as a function
+#                                  ['image_ID', 'mission']) # Put this as a function
 #imc.create_new_user_column()
 imc.get_image_from_database(5)
 print imc.current_img_status
