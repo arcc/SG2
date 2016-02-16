@@ -1,6 +1,6 @@
 from get_image_id_example import image_list_file  # Import the class we built
 from sg2_img import ASTRO_IMG                        # get_image_id_example.py
-filename = 'sg2.csv'  # input file name
+filename = 'test_image_list.dat'  # input file name
 imagefile = image_list_file(filename)  # this class needs a filename as input.
 # print some attributes' Value for the test
 

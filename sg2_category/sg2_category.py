@@ -69,7 +69,10 @@ class image_category(object):
             query = ("UPDATE %s SET other = '%s' "
                      "WHERE image_index=%d"%(tname, self.user_specify, index))
         self.database.cursor.execute(query)
-
+        query = ("UPDATE %s SET number_categoried=number_categoried+1"
+                 " WHERE image_index=%d"%(tname, index))
+        self.database.cursor.execute(query)
+        
     def set_quailty_control(self, image_id, value):
         tname = self.data_table
         if value:
