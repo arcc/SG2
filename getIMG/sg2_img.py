@@ -12,7 +12,7 @@ infopage = 'http://eol.jsc.nasa.gov/SearchPhotos/photo.pl?'
 class ASTRO_IMG(object):
     """This is a class for astronaut image information.
     """
-    def __init__(self,image_id,mission = None):
+    def __init__(self,image_id,mission = None, parse_info=False):
         self.image_id = image_id
         if mission is None:
             self.mission = self.get_mission(self.image_id)
@@ -40,7 +40,8 @@ class ASTRO_IMG(object):
                            'Time taken': ''}
 
         self.img_category = None
-        self.get_image_info()
+        if parse_info:
+            self.get_image_info()
         self.info_list = ['nadir', 'photo_center', 'focal_length',
                           'time_taken', 'img_category', 'spacecraft_alt']
 
