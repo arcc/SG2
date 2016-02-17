@@ -168,3 +168,7 @@ class ASTRO_IMG(object):
         output = open(outfilename,"wb")
         output.write(data)
         output.close()
+
+
+if __name__ == "__main__":
+    pass

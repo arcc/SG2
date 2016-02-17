@@ -58,21 +58,27 @@ class image_category(object):
         self.current_user_result = str(user_result[0][0])
 
     def user_input(self, category_code):
+        """category_code is a list of int from 0 to 12
+        """
+        if not isinstance(category_code,(list,tuple)):
+            category_code = [category_code,]
         tname = self.data_table
         usr = self.user.name
+        uinput = ''
         index = self.current_index
-        uinput = self.category_dict[category_code]
+        for res in category_code:
+            uinput += str(res)+','
         query = ("UPDATE %s SET %s = '%s' "
                  "WHERE image_index=%s"%(tname, usr, uinput, index))
         self.database.cursor.execute(query)
-        if category_code == 11:
+        if 11 in category_code:
             query = ("UPDATE %s SET other = '%s' "
                      "WHERE image_index=%d"%(tname, self.user_specify, index))
         self.database.cursor.execute(query)
         query = ("UPDATE %s SET number_categoried=number_categoried+1"
                  " WHERE image_index=%d"%(tname, index))
         self.database.cursor.execute(query)
-        
+
     def set_quailty_control(self, image_id, value):
         tname = self.data_table
         if value:
@@ -83,3 +89,7 @@ class image_category(object):
         query = ("UPDATE %s SET quality_control = %d "
                  "WHERE image_ID='%s'"%(tname, v, image_id))
         self.database.cursor.execute(query)
+
+
+if __name__ == "__main__":
+    pass

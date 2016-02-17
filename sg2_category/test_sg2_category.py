@@ -1,5 +1,5 @@
 # This is a test file for sg2_category
-from .sg2_category import image_category
+from sg2_category import image_category
 from ..database.sg2_database_utils import image_database
 from ..sg2_users.user import USER
 
