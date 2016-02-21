@@ -22,6 +22,7 @@ def push_result(username, project_name, index_in_db, category_code, user_specify
     else:
         imc.get_image_from_database(index_in_db)
         imc.user_input(category_code)
+        imc.database.cnx.commit()
         return
 
 if __name__== "__main__":
