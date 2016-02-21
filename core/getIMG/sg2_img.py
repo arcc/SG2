@@ -19,6 +19,7 @@ class ASTRO_IMG(object):
         else:
             self.mission = mission
         self.image_url = self.get_url()
+        self.image_url_large = self.get_url(large=True)
         self.page_url = self.get_page_url()
         self.image_info_pattern = {'ISS nadir point':
             re.compile(r'ISS nadir point:</b></em> \d+.+\d+&deg;+ [A-Z]+'),

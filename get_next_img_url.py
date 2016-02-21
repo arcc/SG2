@@ -9,7 +9,7 @@ import sys
 
 db = image_database(password='root')
 
-def get_next_image_url(username, project_name, index_in_db, max_rate):
+def get_next_image_url(username, project_name, index_in_db, max_rate=4):
     """This is a wrapper funciton for sg2 category php
     Parameter
     ----------
@@ -46,8 +46,9 @@ def get_next_image_url(username, project_name, index_in_db, max_rate):
 
     imc.get_image_from_database(index_in_db)
     url = imc.current_image.image_url
+    url_large = imc.current_image.image_url_large
     index = imc.current_index
-    return json.dumps((url,index))
+    return json.dumps((url, url_large, index))
 
 if __name__== "__main__":
     print get_next_image_url(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
