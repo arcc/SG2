@@ -8,7 +8,9 @@ import sys
 
 db = image_database(password='root')
 def push_result(username, project_name, index_in_db, category_code, user_specify='',
-                max_rate=4,):
+                max_rate=4):
+    """
+    """
     index_in_db = int(index_in_db)
     max_rate = int(max_rate)
     user = u.USER(username)
@@ -26,4 +28,14 @@ def push_result(username, project_name, index_in_db, category_code, user_specify
         return
 
 if __name__== "__main__":
-    push_result(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    username = sys.argv[1]
+    project_name = sys.argv[2]
+    img_index = int(sys.argv[3])
+    user_result = sys.argv[4]
+    user_result = user_result.split(',')
+    user_result_dig = [int(x) for x in user_result]
+    if len(sys.argv) >= 6:
+        max_rate = sys.argv[5]
+        push_result(username, project_name, img_index, user_result_dig, max_rate)
+    else:
+        push_result(username, project_name, img_index, user_result_dig)
