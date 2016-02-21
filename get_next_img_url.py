@@ -51,4 +51,12 @@ def get_next_image_url(username, project_name, index_in_db, max_rate=4):
     return json.dumps((url, url_large, index))
 
 if __name__== "__main__":
-    print get_next_image_url(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    username = sys.argv[1]
+    project_name = sys.argv[2]
+    img_index = int(sys.argv[3])
+    if len(sys.argv) >= 5:
+        max_rate = int(sys.argv[4])
+        print get_next_image_url(sys.argv[1], sys.argv[2], sys.argv[3],
+                                 sys.argv[4])
+    else:
+       print get_next_image_url(sys.argv[1], sys.argv[2], sys.argv[3])
