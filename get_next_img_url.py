@@ -5,6 +5,10 @@ useage:
     $python get_next_image_url.py username project_name index_in_db
     or
     $python get_next_image_url.py username project_name index_in_db max_rate
+Return:
+    print [small image url, large image url, index]
+    If the index execcds from the database
+    print ['-1', '-1', index]
 """
 from core.sg2_category import sg2_category as sg2c
 from core.database.sg2_database_utils import image_database
