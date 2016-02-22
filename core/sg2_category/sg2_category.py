@@ -21,9 +21,8 @@ class image_category(object):
                               13:'Unfocused Earthobs'}
         self.user_specify = ''
         self.data_table = None
-
+        self.total_img_in_table = 0
         #self.table_in_database = self.check_data_table()
-
 
     def check_data_table(self,tablename):
         tables = self.database.tables
@@ -32,7 +31,6 @@ class image_category(object):
         else:
             return False
 
-
     def create_data_table(self,tablename):
         self.database.creat_table(tablename, 'category')
         self.database.cnx.commit()
@@ -40,6 +38,7 @@ class image_category(object):
     def change_data_table(self,tablename):
         if self.check_data_table(tablename):
             self.data_table = tablename
+            self.total_img_in_table = self.database.get_total_num_image(tablename)
         else:
             raise RuntimeError("Table " + tablename + " not in database.")
 
@@ -58,7 +57,7 @@ class image_category(object):
         self.current_user_result = str(user_result[0][0])
 
     def user_input(self, category_code):
-        """category_code is a list of int from 0 to 12
+        """category_code is a list of int from 1 to 13
         """
         if not isinstance(category_code,(list,tuple)):
             category_code = [category_code,]
@@ -66,6 +65,9 @@ class image_category(object):
         usr = self.user.name
         uinput = ''
         index = self.current_index
+        user_result_before = self.database.get_table_element(self.project_name,
+                                 usr, 'image_index=%d'%index)
+        user_result_before = user_result_before[0][0]
         for res in category_code:
             uinput += str(res)+','
         query = ("UPDATE %s SET %s = '%s' "
@@ -75,9 +77,11 @@ class image_category(object):
             query = ("UPDATE %s SET other = '%s' "
                      "WHERE image_index=%d"%(tname, self.user_specify, index))
         self.database.cursor.execute(query)
-        query = ("UPDATE %s SET number_categoried=number_categoried+1"
-                 " WHERE image_index=%d"%(tname, index))
-        self.database.cursor.execute(query)
+        # update number_categoried
+        if user_result_before == '':
+            query = ("UPDATE %s SET number_categoried=number_categoried+1"
+                     " WHERE image_index=%d"%(tname, index))
+            self.database.cursor.execute(query)
 
     def set_quailty_control(self, image_id, value):
         tname = self.data_table
