@@ -40,7 +40,7 @@ class image_database(object): # API to interact with database
     def login_database(self):
         info = self.server_info
         self.cnx = mysql.connector.connect(**self.server_info)
-        self.cursor = self.cnx.cursor()
+        self.cursor = self.cnx.cursor(buffered=True)
 
     def get_tables(self,):
         self.cursor.execute("SHOW TABLES")
@@ -70,6 +70,12 @@ class image_database(object): # API to interact with database
 
     def delete_table(self, tablename):
         self.cursor.execute("DROP TABLE " + tablename)
+
+    def get_total_num_image(self, tablename):
+        query = "SELECT COUNT(*) FROM %s"%tablename
+        self.cursor.execute(query)
+        response = self.cursor.fetchone()
+        return response[0]
 
     def get_image_row(self, table_name, index):
         query = "SELECT * FROM %s WHERE image_index=%s"%(table_name, index)
