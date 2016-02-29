@@ -29,6 +29,10 @@ class image_database(object): # API to interact with database
         self.data_type_sep = {'str': 'varchar(40)',
                               'int': 'int(20)',
                               'bool': 'TINYINT(1)'}
+        self.table_default_columns = {'category':
+                                       ['image_index', 'image_ID', 'mission',
+                                        'other', 'number_categoried',
+                                        'catelog_result', 'quality_control']}
 
         if local:
             self.login_database()
@@ -48,6 +52,10 @@ class image_database(object): # API to interact with database
         self.tables = []
         for t in response:
             self.tables.append(t[0])
+    def get_table_columns(self, table_name):
+        self.cursor.execute('SHOW COLUMNS FROM %s'%table_name)
+        response = self.cursor.fetchall()
+        return response
 
     def display_database_info(self, showcommand):
         self.cursor.execute(showcommand)
