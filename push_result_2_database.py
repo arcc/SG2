@@ -63,13 +63,16 @@ if __name__== "__main__":
     img_index = int(sys.argv[3])
     user_result = sys.argv[4]
     user_result = user_result.split(',')
+    if user_result[-1] == '':
+        user_result.remove(user_result[-1])
     user_result_dig = [int(x) for x in user_result if int(x) != 0]
     if user_result_dig == []:
         sys.exit()
 
+    if len(sys.argv) == 5:
+        push_result(username, project_name, img_index, user_result_dig)
 
-
-    if len(sys.argv) == 6:
+    elif len(sys.argv) == 6:
         try:
             max_rate = int(sys.argv[5])
             push_result(username, project_name, img_index, user_result_dig,

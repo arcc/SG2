@@ -42,9 +42,20 @@ class image_category(object):
         else:
             raise RuntimeError("Table " + tablename + " not in database.")
 
-    def create_new_user_column(self,):
-        self.database.add_column(self.data_table, self.user.name, str,
+    def create_new_user_column(self,tablename):
+        self.database.add_column(tablename, self.user.name, str,
                                  'mission')
+                                 
+    def get_all_users(self, tablename):
+        """Get all the user name from data_table
+        """
+        col_name = self.database.get_table_columns(tablename)
+        users = []
+        for col in col_name:
+            colkey = col[0]
+            if colkey not in self.database.table_default_columns['category']:
+                users.append(colkey)
+        return users
 
     def get_image_from_database(self,index):
         row = self.database.get_image_row(self.data_table, index)
