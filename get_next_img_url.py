@@ -43,6 +43,8 @@ def get_next_image_url(username, project_name, index_in_db, max_rate=4):
     imc.change_data_table(project_name)
     if index_in_db > imc.total_img_in_table:
         return json.dumps(('-1', '-1', index_in_db))
+    if index_in_db == 0:
+        index_in_db = 1
     num_rated = imc.database.get_table_element(project_name, 'number_categoried',
                                      'image_index=%d'%index_in_db)
     user_result = imc.database.get_table_element(project_name, username,

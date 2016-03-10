@@ -50,12 +50,15 @@ def push_result(username, project_name, index_in_db, category_code, user_specify
                                      'image_index=%d'%index_in_db)[0][0]
 
     if num_rated[0][0] > max_rate and user_result_before == '':
-        return
+        return json.dumps("0", str(index_in_db))
     else:
-        imc.get_image_from_database(index_in_db)
-        imc.user_input(category_code)
-        imc.database.cnx.commit()
-        return
+        try:
+            imc.get_image_from_database(index_in_db)
+            imc.user_input(category_code)
+            imc.database.cnx.commit()
+        except:
+            return json.dumps("-1", str(index_in_db))
+        return json.dumps("1", str(index_in_db))
 
 if __name__== "__main__":
     username = sys.argv[1]
@@ -70,12 +73,12 @@ if __name__== "__main__":
         sys.exit()
 
     if len(sys.argv) == 5:
-        push_result(username, project_name, img_index, user_result_dig)
+        print push_result(username, project_name, img_index, user_result_dig)
 
     elif len(sys.argv) == 6:
         try:
             max_rate = int(sys.argv[5])
-            push_result(username, project_name, img_index, user_result_dig,
+            print push_result(username, project_name, img_index, user_result_dig,
                         max_rate=max_rate)
         except:
             user_specify = sys.argv[5]
@@ -85,5 +88,5 @@ if __name__== "__main__":
     elif len(sys.argv) == 7:
         max_rate = int(sys.argv[6])
         user_specify = sys.argv[5]
-        push_result(username, project_name, img_index, user_result_dig,
+        print push_result(username, project_name, img_index, user_result_dig,
                     max_rate=max_rate, user_specify=user_specify)
