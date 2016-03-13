@@ -16,6 +16,18 @@ class users_database(DataBase): # API to interact with database
                                                  password=password, host=host,
                                                  port=port, database=database,
                                                  unix_socket=unix_socket)
+    #TODO: NEED To Fix it here.
+        self.table_template.update({'user_statistics':
+                       lambda x:( "CREATE TABLE `%s` ("
+                         "  `user_ID` int(11) NOT NULL AUTO_INCREMENT,"
+                         "  `user_name` varchar(20) NOT NULL,"
+                         "  `mission` varchar(20) NOT NULL,"
+                         "  `other` varchar(40) NOT NULL,"
+                         "  `number_categoried` int(11) NOT NULL,"
+                         "  `catelog_result` varchar(40) NOT NULL,"
+                         "  `quality_control` TINYINT(1) NOT NULL,"
+                         "  PRIMARY KEY (`user_ID`)"
+                         ") ENGINE=InnoDB")%x,})
 
     def get_user(self, datatable, user_name):
         condition = "user_login='%s'"%user_name

@@ -90,3 +90,33 @@ class image_database(DataBase): # API to interact with database
                      " (image_id) "
                      "VALUES (%s)")
         self.cursor.execute(add_image, (img_id,))
+
+    def get_all_users(self, table_name):
+        """Get all users from data table
+        """
+        col_name = self.get_table_keys(table_name)
+        users = []
+        for col in col_name:
+            colkey = col[0]
+            if colkey not in self.table_default_columns['category']:
+                users.append(colkey)
+        return users
+
+    def get_final_result(self, table_name,img_id):
+        usrs = self.get_all_users(table_name)
+        col, colkeys = self.get_table_column_data(table_name, usrs,'image_index=%s'%img_id)
+        user_result = {}
+        compare = []
+        for ii, res in enumerate(col[0]):
+            res =  res.split(',')
+            m = filter(bool, res)
+            m = map(int,m)
+            user_result[colkeys[ii]] = m
+            if m != []:
+                compare.append(set(m))
+
+        result_int = list(reduce(set.intersection, compare))
+        result_str = ''
+        for res in result_int:
+            result_str += str(res) + ','
+        return result_str

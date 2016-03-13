@@ -70,7 +70,7 @@ class DataBase(object): # API to interact with database
         else:
             print "OK"
 
-    def get_table_columns(self, table_name):
+    def get_table_keys(self, table_name):
         self.cursor.execute('SHOW COLUMNS FROM %s'%table_name)
         response = self.cursor.fetchall()
         return response
@@ -80,6 +80,28 @@ class DataBase(object): # API to interact with database
         self.cursor.execute(query)
         response = self.cursor.fetchall()
         return response
+
+    def get_table_column_data(self, table_name, column_names, condition=''):
+        """This a function to get the column from the database.
+        """
+        col_name = ''
+        col = self.get_table_keys(table_name)
+        col_keys = []
+        for c in col:
+            col_keys.append(c[0])
+        for cn in column_names:
+            if cn not in col_keys:
+                raise ValueError("Column %s is not in the table %s."%(cn,
+                                 table_name))
+            col_name += cn +','
+        col_name = col_name[:-1]
+        if condition == '':
+            query = "SELECT %s FROM %s"%(col_name, table_name)
+        else:
+            query = "SELECT %s FROM %s WHERE %s "%(col_name, table_name, condition)
+        self.cursor.execute(query)
+        response = self.cursor.fetchall()
+        return response, column_names
 
     def add_column(self, table_name, column_name, col_type, after_col_name):
         """ Add a column to a table.
