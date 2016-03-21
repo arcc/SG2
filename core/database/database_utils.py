@@ -16,7 +16,7 @@ class DataBase(object): # API to interact with database
                             'database': database
                            }
         self.data_type_sep = {'str': 'varchar(40)',
-                              'int': 'int(20)',
+                              'int': 'INT(20)',
                               'bool': 'TINYINT(1)'}
 
         self.table_template = {}
@@ -56,7 +56,7 @@ class DataBase(object): # API to interact with database
         response = self.cursor.fetchall()
         return response
 
-    def creat_table(self, name, table_type):
+    def create_table(self, name, table_type):
         if table_type not in self.table_template.keys():
             raise ValueError('Undefined table type ' + table_type)
         try:
@@ -121,6 +121,28 @@ class DataBase(object): # API to interact with database
         query  = ("ALTER TABLE %s ADD %s %s NOT NULL"
                   " after %s"%(table_name, column_name, colt, after_col_name))
         self.cursor.execute(query)
+
+    def add_row(self, table_name, col):
+        """
+        Parameter
+        ---------
+        table_name : str
+            Name of table
+        col : dict
+            Column name ane column value
+        """
+        #"VALUES (%(emp_no)s, %(salary)s, %(from_date)s, %(to_date)s)"
+        coln = " ("
+        colv = "("
+        for key in col.keys():
+            coln += key + ","
+            colv += "%("+ key + ")s,"
+        coln = coln[:-1] + ") "
+        colv = colv[:-1] + ") "
+        query = ("INSERT INTO " + table_name + coln +
+                     "VALUES " + colv)
+        self.cursor.execute(query, col)
+
 
     def update_element(self, tablename, column, condition, value):
         query = ("UPDATE %s SET %s = '%s' "

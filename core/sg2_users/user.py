@@ -19,3 +19,6 @@ class USER(object):
 
     def update_user_info(self, username, tablename):
         pass
+
+    def get_user_statistics(self, username, tablename):
+        pass
