@@ -49,6 +49,7 @@ class DataBase(object): # API to interact with database
         self.tables = []
         for t in response:
             self.tables.append(t[0])
+        return self.tables
 
     def get_table_element(self, table_name, colname, condition):
         query = "SELECT %s FROM %s WHERE %s "%(colname, table_name, condition)
@@ -65,10 +66,13 @@ class DataBase(object): # API to interact with database
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
                 print("already exists.")
+                return "already exists."
             else:
                 print(err.msg)
+                return "error"
         else:
             print "OK"
+            return "OK"
 
     def get_table_keys(self, table_name):
         self.cursor.execute('SHOW COLUMNS FROM %s'%table_name)
