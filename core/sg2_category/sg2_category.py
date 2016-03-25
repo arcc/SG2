@@ -45,16 +45,11 @@ class image_category(object):
     def create_new_user_column(self,tablename):
         self.database.add_column(tablename, self.user.name, str,
                                  'mission')
-                                 
+
     def get_all_users(self, tablename):
         """Get all the user name from data_table
         """
-        col_name = self.database.get_table_columns(tablename)
-        users = []
-        for col in col_name:
-            colkey = col[0]
-            if colkey not in self.database.table_default_columns['category']:
-                users.append(colkey)
+        users = self.database.get_all_users(tablename)
         return users
 
     def get_image_from_database(self,index):
@@ -93,7 +88,10 @@ class image_category(object):
             query = ("UPDATE %s SET number_categoried=number_categoried+1"
                      " WHERE image_index=%d"%(tname, index))
             self.database.cursor.execute(query)
-
+            # update number in statistics
+            for table in self.user.db.statistics_type_indentifier.keys():
+                self.user.db.user_push_update(table, table, usr)
+                
     def set_quailty_control(self, image_id, value):
         tname = self.data_table
         if value:

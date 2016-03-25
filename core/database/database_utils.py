@@ -16,7 +16,7 @@ class DataBase(object): # API to interact with database
                             'database': database
                            }
         self.data_type_sep = {'str': 'varchar(40)',
-                              'int': 'int(20)',
+                              'int': 'INT(20)',
                               'bool': 'TINYINT(1)'}
 
         self.table_template = {}
@@ -49,6 +49,7 @@ class DataBase(object): # API to interact with database
         self.tables = []
         for t in response:
             self.tables.append(t[0])
+        return self.tables
 
     def get_table_element(self, table_name, colname, condition):
         query = "SELECT %s FROM %s WHERE %s "%(colname, table_name, condition)
@@ -56,7 +57,7 @@ class DataBase(object): # API to interact with database
         response = self.cursor.fetchall()
         return response
 
-    def creat_table(self, name, table_type):
+    def create_table(self, name, table_type):
         if table_type not in self.table_template.keys():
             raise ValueError('Undefined table type ' + table_type)
         try:
@@ -65,12 +66,15 @@ class DataBase(object): # API to interact with database
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
                 print("already exists.")
+                return "already exists."
             else:
                 print(err.msg)
+                return "error"
         else:
             print "OK"
+            return "OK"
 
-    def get_table_columns(self, table_name):
+    def get_table_keys(self, table_name):
         self.cursor.execute('SHOW COLUMNS FROM %s'%table_name)
         response = self.cursor.fetchall()
         return response
@@ -80,6 +84,28 @@ class DataBase(object): # API to interact with database
         self.cursor.execute(query)
         response = self.cursor.fetchall()
         return response
+
+    def get_table_column_data(self, table_name, column_names, condition=''):
+        """This a function to get the column from the database.
+        """
+        col_name = ''
+        col = self.get_table_keys(table_name)
+        col_keys = []
+        for c in col:
+            col_keys.append(c[0])
+        for cn in column_names:
+            if cn not in col_keys:
+                raise ValueError("Column %s is not in the table %s."%(cn,
+                                 table_name))
+            col_name += cn +','
+        col_name = col_name[:-1]
+        if condition == '':
+            query = "SELECT %s FROM %s"%(col_name, table_name)
+        else:
+            query = "SELECT %s FROM %s WHERE %s "%(col_name, table_name, condition)
+        self.cursor.execute(query)
+        response = self.cursor.fetchall()
+        return response, column_names
 
     def add_column(self, table_name, column_name, col_type, after_col_name):
         """ Add a column to a table.
@@ -99,6 +125,28 @@ class DataBase(object): # API to interact with database
         query  = ("ALTER TABLE %s ADD %s %s NOT NULL"
                   " after %s"%(table_name, column_name, colt, after_col_name))
         self.cursor.execute(query)
+
+    def add_row(self, table_name, col):
+        """
+        Parameter
+        ---------
+        table_name : str
+            Name of table
+        col : dict
+            Column name ane column value
+        """
+        #"VALUES (%(emp_no)s, %(salary)s, %(from_date)s, %(to_date)s)"
+        coln = " ("
+        colv = "("
+        for key in col.keys():
+            coln += key + ","
+            colv += "%("+ key + ")s,"
+        coln = coln[:-1] + ") "
+        colv = colv[:-1] + ") "
+        query = ("INSERT INTO " + table_name + coln +
+                     "VALUES " + colv)
+        self.cursor.execute(query, col)
+
 
     def update_element(self, tablename, column, condition, value):
         query = ("UPDATE %s SET %s = '%s' "
