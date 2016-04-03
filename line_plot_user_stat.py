@@ -7,7 +7,7 @@ import datetime
 import json
 import sys
 
-def plot_statistics_bar(user_name, time_unit):
+def plot_statistics_line(user_name, time_unit):
     fig_info = {'day': ((15,9), 0.35, 'Daily'),
                 'week': ((12,9), 0.5, 'Weekly'),
                 'year':((20,9), 0.5,'Yearly')}
@@ -67,5 +67,5 @@ def autolabel(rects, ax):
 if __name__== "__main__":
     username = sys.argv[1]
     timeu = sys.argv[2]
-    plot_statistics_bar(username,timeu)
+    plot_statistics_line(username,timeu)
     print "ok"
