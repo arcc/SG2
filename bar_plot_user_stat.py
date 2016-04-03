@@ -35,6 +35,7 @@ def plot_statistics_bar(user_name, time_unit):
     finfo = fig_info[time_unit]
     plt.figure(figsize=finfo[0])
     ax = plt.subplot(111)
+    ax.set_axis_bgcolor('black')
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_visible(False)
@@ -42,7 +43,9 @@ def plot_statistics_bar(user_name, time_unit):
     plt.xticks(fontsize=14)
     ind = np.arange(len(x))
     width = finfo[1]
-    rects1 = ax.bar(ind+ width/2, y, width, color="#3F5D7D")
+    color = np.array([174, 199, 232])/255.0
+    #rects1 = ax.bar(ind+ width/2, y, width, color="#3F5D7D")
+    rects1 = ax.bar(ind+ width/2, y, width, color=color)
     ax.set_ylabel('Number of image categoried')
     ax.set_title(finfo[2] + ' image category report for '+ username + '.', position=(0.45,1.05))
     ax.set_xticks(ind + width)
@@ -50,7 +53,7 @@ def plot_statistics_bar(user_name, time_unit):
     autolabel(rects1, ax)
     plt.tick_params(axis="both", which="both", bottom="off", top="off",
                 labelbottom="on", left="on", right="off", labelleft="on")
-    plt.savefig("bar_"+ time_unit + "_" +username + ".png", bbox_inches="tight")
+    plt.savefig("bar_"+ time_unit + "_" +username + ".png", bbox_inches="tight", facecolor='black')
 
 def autolabel(rects, ax):
     # attach some text labels
