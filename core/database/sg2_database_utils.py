@@ -1,3 +1,5 @@
+# This is a utils for sg2 image database
+#Author Jing Luo
 import mysql.connector
 from mysql.connector import errorcode
 from .database_utils import DataBase
@@ -34,6 +36,7 @@ class image_database(DataBase): # API to interact with database
                                        ['image_index', 'image_ID', 'mission',
                                         'other', 'number_categoried',
                                         'catelog_result', 'quality_control']}
+        self.image_table_prefix = 'sg2'
 
     def get_total_num_image(self, tablename):
         query = "SELECT COUNT(*) FROM %s"%tablename

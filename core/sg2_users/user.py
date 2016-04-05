@@ -1,7 +1,7 @@
 # This file is for user class
 from ..database.users_database_utils import users_database
 import numpy as np
-
+# Here we are using wp_users table as user info storage. 
 db_login_pw = 'root'
 class USER(object):
     """This is a class for sg2 user
@@ -14,11 +14,13 @@ class USER(object):
         self.accurate_rate = 0.0
         self.last_ranked_image = 0
         self.db = users_database(password=db_login_pw)
+        self.get_user_info(self.name, 'wp_users')
         self.time_unit_type = {'day': ('user_statistics_day', 'Hour'),
                                'week': ('user_statistics_week', 'Day'),
                                'year': ('user_statistics_year', 'Week')}
     def get_user_info(self, username, tablename):
         self.user_info = self.db.get_user(tablename, username)
+        return self.user_info
 
     def update_user_info(self, username, tablename):
         pass
