@@ -16,18 +16,18 @@ import sys
 
 db = image_database(password='root')
 
-def get_last_image_index(username, project_name, users_table):
+def get_last_image_index(username, project_name):
     user = u.USER(username)
-    imc = sg2c.image_category( db, user, project_name)
+    condition = "user_name='%s'"%username
     try:
-        imc.user.get_user_info(imc.user.name, users_table)
+        res = user.db.get_table_element('user_last_index', project_name, condition)
     except:
         return json.dumps('-1')
-    return json.dumps(str(imc.user.user_info['last_index']))
+    return json.dumps(res[0][0])
 
 
 if __name__== "__main__":
     username = sys.argv[1]
     project_name = sys.argv[2]
-    users_table = sys.argv[3]
-    print get_last_image_index(username, project_name, users_table)
+    print get_last_image_index(username, project_name)
+# Author Jing Luo

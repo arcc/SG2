@@ -43,22 +43,19 @@ def push_result(username, project_name, index_in_db, category_code, user_specify
     imc.user_specify = user_specify
     imc.change_data_table(project_name)
     if index_in_db > imc.total_img_in_table:
-        return
+        return json.dumps("0", index_in_db)
     num_rated = imc.database.get_table_element(project_name, 'number_categoried',
                                      'image_index=%d'%index_in_db)
     user_result_before = imc.database.get_table_element(project_name, username,
                                      'image_index=%d'%index_in_db)[0][0]
 
     if num_rated[0][0] > max_rate and user_result_before == '':
-        return json.dumps("0", str(index_in_db))
+        return json.dumps("0", index_in_db)
     else:
-        try:
-            imc.get_image_from_database(index_in_db)
-            imc.user_input(category_code)
-            imc.database.cnx.commit()
-        except:
-            return json.dumps("-1", str(index_in_db))
-        return json.dumps("1", str(index_in_db))
+        imc.get_image_from_database(index_in_db)
+        imc.user_input(project_name, index_in_db, category_code)
+        imc.database.cnx.commit()
+        return json.dumps("1", index_in_db)
 
 if __name__== "__main__":
     username = sys.argv[1]
@@ -84,7 +81,7 @@ if __name__== "__main__":
             user_specify = sys.argv[5]
             push_result(username, project_name, img_index, user_result_dig,
                         user_specify=user_specify)
-
+    # Author Jing Luo
     elif len(sys.argv) == 7:
         max_rate = int(sys.argv[6])
         user_specify = sys.argv[5]

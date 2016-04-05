@@ -8,7 +8,7 @@ setup(
     version = '0.0.1',
     description = 'A image library for STARGATE SG2 ',
 
-    author = 'Luo Jing, Aldo, Anthony, et al.',
+    author = 'Luo Jing, Anthony Elite, et al.',
     author_email = 'luojing1211@gmail.com',
     url = 'https://github.com/arcc/SG2',
 

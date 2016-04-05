@@ -51,12 +51,6 @@ class DataBase(object): # API to interact with database
             self.tables.append(t[0])
         return self.tables
 
-    def get_table_element(self, table_name, colname, condition):
-        query = "SELECT %s FROM %s WHERE %s "%(colname, table_name, condition)
-        self.cursor.execute(query)
-        response = self.cursor.fetchall()
-        return response
-
     def create_table(self, name, table_type):
         if table_type not in self.table_template.keys():
             raise ValueError('Undefined table type ' + table_type)
@@ -122,8 +116,8 @@ class DataBase(object): # API to interact with database
         if coltype_string not in self.data_type_sep.keys():
             raise ValueError('Unknown type '+ coltype_string)
         colt = self.data_type_sep[coltype_string]
-        query  = ("ALTER TABLE %s ADD %s %s NOT NULL"
-                  " after %s"%(table_name, column_name, colt, after_col_name))
+        query  = ("ALTER TABLE %s ADD `%s` %s NOT NULL"
+                  " after `%s`"%(table_name, column_name, colt, after_col_name))
         self.cursor.execute(query)
 
     def add_row(self, table_name, col):

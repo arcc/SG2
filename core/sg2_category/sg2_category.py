@@ -1,3 +1,5 @@
+# This is a class for sg2 category
+# Author Jing Luo
 from ..getIMG.sg2_img import ASTRO_IMG
 from ..database.sg2_database_utils import image_database
 from ..sg2_users.user import USER
@@ -5,7 +7,7 @@ from ..sg2_users.user import USER
 
 class image_category(object):
     """ This core class for sg2 image category """
-    def __init__(self, database, user, project_name):
+    def __init__(self, database, user, project_name=None):
         self.database = database
         self.user = user
         self.project_name = project_name
@@ -62,16 +64,16 @@ class image_category(object):
                                                       'image_index=%d'%index)
         self.current_user_result = str(user_result[0][0])
 
-    def user_input(self, category_code):
+    def user_input(self, tablename, index, category_code):
         """category_code is a list of int from 1 to 13
         """
         if not isinstance(category_code,(list,tuple)):
             category_code = [category_code,]
-        tname = self.data_table
+        tname = tablename
         usr = self.user.name
         uinput = ''
-        index = self.current_index
-        user_result_before = self.database.get_table_element(self.project_name,
+        index = index
+        user_result_before = self.database.get_table_element(tname,
                                  usr, 'image_index=%d'%index)
         user_result_before = user_result_before[0][0]
         for res in category_code:
@@ -91,7 +93,18 @@ class image_category(object):
             # update number in statistics
             for table in self.user.db.statistics_type_indentifier.keys():
                 self.user.db.user_push_update(table, table, usr)
-                
+            self.update_user_last_index(index, tname)
+
+    def update_user_last_index(self, last_index, image_table):
+        if self.user.user_info != []:
+            uname = self.user.user_info['user_login']
+        else:
+            raise ValueError('User %s is not in database'%self.user.name)
+        query = ("UPDATE %s SET %s=%s"
+                 " WHERE user_name='%s'"%('user_last_index',image_table,last_index,uname))
+        self.user.db.cursor.execute(query)
+        self.user.db.cnx.commit()
+
     def set_quailty_control(self, image_id, value):
         tname = self.data_table
         if value:
