@@ -45,6 +45,7 @@ def create_user(username):
                 continue
             else:
                 imc.create_new_user_column(tb)
+    # Author Luo Jing
     imc.database.cnx.commit()
     user.db.cnx.commit()
     return json.dumps('Ok')
