@@ -18,7 +18,7 @@ def get_sg2_img_tables(table_prefix):
     for tn in tables:
         if tn.startswith(table_prefix):
             sg2_tables.append(tn)
-    return sg2_tables
+    return json.dumps(sg2_tables)
 
 if __name__== "__main__":
     prefix = sys.argv[1]
