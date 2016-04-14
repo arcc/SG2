@@ -55,6 +55,8 @@ class users_database(DataBase): # API to interact with database
                         lambda x:( "CREATE TABLE `%s` ("
                           "  `user_ID` int(11) NOT NULL AUTO_INCREMENT,"
                           "  `user_name` varchar(20) NOT NULL,"
+                          "  `user_last_index` int(11) NOT NULL,"
+                          "  `user_last_input_time` TIMESTAMP,"
                           "  PRIMARY KEY (`user_ID`)"
                           ") ENGINE=InnoDB")%x,})
 

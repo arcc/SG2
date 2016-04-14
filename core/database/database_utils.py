@@ -153,6 +153,12 @@ class DataBase(object): # API to interact with database
         response = self.cursor.fetchall()
         return response
 
+    def get_table_last_row(self, table_name, sort_key, colname='*'):
+        query = "SELECT %s FROM %s ORDER BY %s DESC LIMIT 1"%(colname, table_name, sort_key)
+        self.cursor.execute(query)
+        response = self.cursor.fetchall()
+        return response
+
     def display_database_info(self, showcommand):
         self.cursor.execute(showcommand)
         response = self.cursor.fetchall()
