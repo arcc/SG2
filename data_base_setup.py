@@ -4,9 +4,11 @@ This is a python script to setup the database
 """
 from core.database.users_database_utils import users_database
 from core.database.sg2_database_utils import image_database
+import get_config as gc
 
+cf = gc.get_config('config.dat')
 # setup the users database
-usrdb = users_database(password='root')
+usrdb = users_database(user=cf['user_db_usr'],password=cf['user_db_pw'])
 usrdb.create_statistics_tables()
 usr_tables = usrdb.get_tables()
 for utb in usr_tables:
@@ -17,7 +19,7 @@ usrdb.import_user_from_wp_users('user_last_index')
 
 
 # setup the image database
-imgdb = image_database(password='root')
+imgdb = image_database(user=cf['img_db_usr'],password=cf['img_db_pw'])
 # Create project table
 imgdb.create_table('projects', 'project_info')
 # Create image info table

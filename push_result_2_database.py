@@ -15,11 +15,11 @@ from core.database.sg2_database_utils import image_database
 from core.sg2_users import user as u
 import json
 import sys
+mport get_config as gc
 
-
-db = image_database(password='root')
-def push_result(username, project_name, index_in_db, category_code, user_specify='',
-                max_rate=4):
+cf = gc.get_config('config.dat')
+db = image_database(user=cf['img_db_usr'], password=cf['img_db_pw'])
+def push_result(username, index_in_db, category_code, user_specify=''):
     """A function pushes a result to database
     Parameter
     ----------
@@ -37,53 +37,26 @@ def push_result(username, project_name, index_in_db, category_code, user_specify
         Maximum number of rated.
     """
     index_in_db = int(index_in_db)
-    max_rate = int(max_rate)
     user = u.USER(username)
-    imc = sg2c.image_category( db, user, project_name)
-    imc.user_specify = user_specify
-    imc.change_data_table(project_name)
-    if index_in_db > imc.total_img_in_table:
-        return json.dumps("0", index_in_db)
-    num_rated = imc.database.get_table_element(project_name, 'number_categoried',
-                                     'image_index=%d'%index_in_db)
-    user_result_before = imc.database.get_table_element(project_name, username,
-                                     'image_index=%d'%index_in_db)[0][0]
-
-    if num_rated[0][0] > max_rate and user_result_before == '':
-        return json.dumps("0", index_in_db)
-    else:
-        imc.get_image_from_database(index_in_db)
-        imc.user_input(project_name, index_in_db, category_code)
-        imc.database.cnx.commit()
-        return json.dumps("1", index_in_db)
+    imc = sg2c.image_category(db, user)
+    result = imc.user_input('sg2_image_rate', index_in_db, category_code, user_specify=user_specify)
+    return json.dumps((str(result), str(index_in_db)))
 
 if __name__== "__main__":
     username = sys.argv[1]
-    project_name = sys.argv[2]
-    img_index = int(sys.argv[3])
-    user_result = sys.argv[4]
+    img_index = int(sys.argv[2])
+    user_result = sys.argv[3]
     user_result = user_result.split(',')
     if user_result[-1] == '':
         user_result.remove(user_result[-1])
     user_result_dig = [int(x) for x in user_result if int(x) != 0]
     if user_result_dig == []:
-        sys.exit()
+        print json.dumps(("0", str(img_index)))
+        exit()
 
     if len(sys.argv) == 5:
-        print push_result(username, project_name, img_index, user_result_dig)
-
-    elif len(sys.argv) == 6:
-        try:
-            max_rate = int(sys.argv[5])
-            print push_result(username, project_name, img_index, user_result_dig,
-                        max_rate=max_rate)
-        except:
-            user_specify = sys.argv[5]
-            push_result(username, project_name, img_index, user_result_dig,
-                        user_specify=user_specify)
-    # Author Jing Luo
-    elif len(sys.argv) == 7:
-        max_rate = int(sys.argv[6])
-        user_specify = sys.argv[5]
-        print push_result(username, project_name, img_index, user_result_dig,
-                    max_rate=max_rate, user_specify=user_specify)
+        user_specify = sys.argv[4]
+        print push_result(username, img_index, user_result_dig, user_specify=user_specify)
+    else:
+        print push_result(username, img_index, user_result_dig)
+    # # Author Jing Luo

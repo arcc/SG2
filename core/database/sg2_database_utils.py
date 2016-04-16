@@ -34,8 +34,9 @@ class image_database(DataBase): # API to interact with database
 
         self.table_template.update({'rate':
                            lambda x:( "CREATE TABLE `%s` ("
-                             "  `index` int(11) NOT NULL AUTO_INCREMENT,"
+                             "  `rate_index` int(11) NOT NULL AUTO_INCREMENT,"
                              "  `image_ID` varchar(20) NOT NULL,"
+                             "  `info_table_index` int(11) NOT NULL,"
                              "  `rater_name` varchar(20) NOT NULL,"
                              "  `rate_time` TIMESTAMP,"
                              "  `c1` TINYINT(1) NOT NULL,"
@@ -52,7 +53,8 @@ class image_database(DataBase): # API to interact with database
                              "  `c12` TINYINT(1) NOT NULL,"
                              "  `c13` TINYINT(1) NOT NULL,"
                              "  `other` varchar(40) NOT NULL,"
-                             "  PRIMARY KEY (`index`)"
+                             "  `rate_check` TINYINT(1) NOT NULL,"
+                             "  PRIMARY KEY (`rate_index`)"
                              ") ENGINE=InnoDB")%x,
                               })
 
@@ -125,11 +127,18 @@ class image_database(DataBase): # API to interact with database
         response = self.cursor.fetchone()
         return response[0]
 
-    def get_image_row(self, table_name, image_id):
-        query = "SELECT * FROM %s WHERE image_ID=%s"%(table_name, image_id)
+    def get_image_row(self, table_name, index=None, ID=None):
+        if index is not None:
+            query = "SELECT * FROM %s WHERE image_index=%d"%(table_name, index)
+        elif ID is not None:
+            query = "SELECT * FROM %s WHERE image_ID='%s'"%(table_name, ID)
+        else:
+            raise RuntimeError('Index or ID has to be provide.')
         self.cursor.execute(query)
         response = self.cursor.fetchall()
         return response
+
+
 
     def load_image_list_file(self, table_name, filename, field_spe, line_sep,
                              colnames):
@@ -145,14 +154,6 @@ class image_database(DataBase): # API to interact with database
             query += "%s,"%cn
         query = query[:-1]+ ")"
         self.cursor.execute(query)
-
-
-
-    def search_image(self, table_name, image_ID):
-        query = "SELECT * FROM " + table_name + " WHERE image_ID = %s"
-        self.cursor.execute(query, (image_ID,))
-        response = self.cursor.fetchall()
-        return response
 
     def delete_image(self ,table_name, image_ID=None, index=None):
         if id is None:

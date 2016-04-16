@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from core.sg2_category import sg2_category as sg2c
-from core.database.sg2_database_utils import image_database
 from core.sg2_users import user as u
 import numpy as np
 import datetime
@@ -11,7 +10,6 @@ def get_statistics(user_name, time_unit):
     fig_info = {'day': ((15,9), 0.35, 'Daily'),
                 'week': ((12,9), 0.5, 'Weekly'),
                 'year':((17,9), 0.5,'Yearly')}
-    db = image_database(password='root')
     user = u.USER(user_name)
     time_bin_unit = user.time_unit_type[time_unit][1]
     x,y,tu = user.get_user_statistics(user_name, time_unit)

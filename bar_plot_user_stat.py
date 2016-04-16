@@ -6,12 +6,15 @@ import matplotlib.pyplot as plt
 import datetime
 import json
 import sys
+import get_config as gc
 
 def plot_statistics_bar(user_name, time_unit):
     fig_info = {'day': ((15,9), 0.35, 'Daily'),
                 'week': ((12,9), 0.5, 'Weekly'),
                 'year':((17,9), 0.5,'Yearly')}
-    db = image_database(password='root')
+
+    cf = gc.get_config('config.dat')
+    db = image_database(user=cf['img_db_usr'],password=cf['img_db_pw'])
     user = u.USER('luojing')
     time_bin_unit = user.time_unit_type[time_unit][1]
     x,y,tu = user.get_user_statistics(user_name, time_unit)

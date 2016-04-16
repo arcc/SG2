@@ -20,8 +20,6 @@ from core.sg2_users import user as u
 import json
 import sys
 
-imgdb = image_database(password='root')
-
 def create_user(username):
     user = u.USER(username)
 
@@ -36,17 +34,7 @@ def create_user(username):
             user.db.add_user_row(utb, userInfo['user_login'])
     user.db.add_user_row('user_last_index',userInfo['user_login'])
 
-    # Add user to all image_category table
-    imc = sg2c.image_category(imgdb, user)
-    tbs = imgdb.get_tables()
-    for tb in tbs:
-        if tb.startswith('sg2'):
-            if user.name in imc.get_all_users(tb):
-                continue
-            else:
-                imc.create_new_user_column(tb)
     # Author Luo Jing
-    imc.database.cnx.commit()
     user.db.cnx.commit()
     return json.dumps('Ok')
 
