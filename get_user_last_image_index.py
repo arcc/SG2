@@ -13,14 +13,16 @@ from core.database.sg2_database_utils import image_database
 from core.sg2_users import user as u
 import json
 import sys
+mport get_config as gc
+cf = gc.get_config('config.dat')
 
-db = image_database(password='root')
+db = image_database(user=cf['img_db_usr'], password=cf['img_db_pw'])
 
-def get_last_image_index(username, project_name):
+def get_last_image_index(username):
     user = u.USER(username)
     condition = "user_name='%s'"%username
     try:
-        res = user.db.get_table_element('user_last_index', project_name, condition)
+        res = user.db.get_table_element('user_last_index','user_last_index', condition)
     except:
         return json.dumps('-1')
     return json.dumps(res[0][0])
@@ -28,6 +30,5 @@ def get_last_image_index(username, project_name):
 
 if __name__== "__main__":
     username = sys.argv[1]
-    project_name = sys.argv[2]
-    print get_last_image_index(username, project_name)
+    print get_last_image_index(username)
 # Author Jing Luo

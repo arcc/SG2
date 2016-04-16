@@ -1,0 +1,5 @@
+# SG2 config
+user_db_usr root
+user_db_pw root
+img_db_usr root
+img_db_pw root

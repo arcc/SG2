@@ -8,7 +8,7 @@ import os.path
 
 class image_database(DataBase): # API to interact with database
     def __init__(self, local=True, user='root', password='****', host='localhost',
-                 port='8889', database='sg2image',
+                 port='8889', database='sg2',
                  unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock'):
                   # right now it is only support localhost via MAMP
         if local:
@@ -19,6 +19,89 @@ class image_database(DataBase): # API to interact with database
                                                  password=password, host=host,
                                                  port=port, database=database,
                                                  unix_socket=unix_socket)
+        self.table_template.update({'category':
+                           lambda x:( "CREATE TABLE `%s` ("
+                             "  `image_index` int(11) NOT NULL AUTO_INCREMENT,"
+                             "  `image_ID` varchar(20) NOT NULL,"
+                             "  `mission` varchar(20) NOT NULL,"
+                             "  `other` varchar(40) NOT NULL,"
+                             "  `number_categoried` int(11) NOT NULL,"
+                             "  `catelog_result` varchar(40) NOT NULL,"
+                             "  `quality_control` TINYINT(1) NOT NULL,"
+                             "  PRIMARY KEY (`image_index`)"
+                             ") ENGINE=InnoDB")%x,
+                              })
+
+        self.table_template.update({'rate':
+                           lambda x:( "CREATE TABLE `%s` ("
+                             "  `rate_index` int(11) NOT NULL AUTO_INCREMENT,"
+                             "  `image_ID` varchar(20) NOT NULL,"
+                             "  `info_table_index` int(11) NOT NULL,"
+                             "  `rater_name` varchar(20) NOT NULL,"
+                             "  `rate_time` TIMESTAMP,"
+                             "  `c1` TINYINT(1) NOT NULL,"
+                             "  `c2` TINYINT(1) NOT NULL,"
+                             "  `c3` TINYINT(1) NOT NULL,"
+                             "  `c4` TINYINT(1) NOT NULL,"
+                             "  `c5` TINYINT(1) NOT NULL,"
+                             "  `c6` TINYINT(1) NOT NULL,"
+                             "  `c7` TINYINT(1) NOT NULL,"
+                             "  `c8` TINYINT(1) NOT NULL,"
+                             "  `c9` TINYINT(1) NOT NULL,"
+                             "  `c10` TINYINT(1) NOT NULL,"
+                             "  `c11` TINYINT(1) NOT NULL,"
+                             "  `c12` TINYINT(1) NOT NULL,"
+                             "  `c13` TINYINT(1) NOT NULL,"
+                             "  `other` varchar(40) NOT NULL,"
+                             "  `rate_check` TINYINT(1) NOT NULL,"
+                             "  PRIMARY KEY (`rate_index`)"
+                             ") ENGINE=InnoDB")%x,
+                              })
+
+        self.table_template.update({'image_info':
+                           lambda x:( "CREATE TABLE `%s` ("
+                             "  `image_index` int(11) NOT NULL AUTO_INCREMENT,"
+                             "  `image_ID` varchar(20) NOT NULL,"
+                             "  `mission` varchar(20) NOT NULL,"
+                             "  `project` varchar(20) NOT NULL,"
+                             "  `time_added` TIMESTAMP DEFAULT 0,"
+                             "  `c1` int(11) NOT NULL COMMENT 'Number of rate in category 1',"
+                             "  `c2` int(11) NOT NULL COMMENT 'Number of rate in category 2',"
+                             "  `c3` int(11) NOT NULL COMMENT 'Number of rate in category 3',"
+                             "  `c4` int(11) NOT NULL COMMENT 'Number of rate in category 4',"
+                             "  `c5` int(11) NOT NULL COMMENT 'Number of rate in category 5',"
+                             "  `c6` int(11) NOT NULL COMMENT 'Number of rate in category 6',"
+                             "  `c7` int(11) NOT NULL COMMENT 'Number of rate in category 7',"
+                             "  `c8` int(11) NOT NULL COMMENT 'Number of rate in category 8',"
+                             "  `c9` int(11) NOT NULL COMMENT 'Number of rate in category 9',"
+                             "  `c10` int(11) NOT NULL COMMENT 'Number of rate in category 10',"
+                             "  `c11` int(11) NOT NULL COMMENT 'Number of rate in category 11',"
+                             "  `c12` int(11) NOT NULL COMMENT 'Number of rate in category 12',"
+                             "  `c13` int(11) NOT NULL COMMENT 'Number of rate in category 13',"
+                             "  `number_rated` int(11) NOT NULL,"
+                             "  `max_rate` int(11) NOT NULL,"
+                             "  `rate_result` varchar(40) NOT NULL,"
+                             "  `other_category` varchar(40) NOT NULL,"
+                             "  `time_finished` TIMESTAMP DEFAULT 0,"
+                             "  `quality_control` TINYINT(1) NOT NULL,"
+                             "  PRIMARY KEY (`image_index`)"
+                             ") ENGINE=InnoDB")%x,
+                              })
+
+        self.table_template.update({'project_info':
+                           lambda x:( "CREATE TABLE `%s` ("
+                             "  `project_index` int(11) NOT NULL AUTO_INCREMENT,"
+                             "  `project_name` varchar(20) NOT NULL,"
+                             "  `time_added` TIMESTAMP DEFAULT 0,"
+                             "  `finish` TINYINT(1) NOT NULL,"
+                             "  `time_finished` TIMESTAMP DEFAULT 0,"
+                             "  `number_image` int(11) NOT NULL,"
+                             "  `start_image_index` int(11) NOT NULL COMMENT 'Project first image index in image_info table',"
+                             "  `end_image_index` int(11) NOT NULL COMMENT 'Project last image index in image_info table',"
+                             "  PRIMARY KEY (`project_index`)"
+                             ") ENGINE=InnoDB")%x,
+                              })
+
         self.table_template.update({'category':
                            lambda x:( "CREATE TABLE `%s` ("
                              "  `image_index` int(11) NOT NULL AUTO_INCREMENT,"
@@ -44,11 +127,18 @@ class image_database(DataBase): # API to interact with database
         response = self.cursor.fetchone()
         return response[0]
 
-    def get_image_row(self, table_name, index):
-        query = "SELECT * FROM %s WHERE image_index=%s"%(table_name, index)
+    def get_image_row(self, table_name, index=None, ID=None):
+        if index is not None:
+            query = "SELECT * FROM %s WHERE image_index=%d"%(table_name, index)
+        elif ID is not None:
+            query = "SELECT * FROM %s WHERE image_ID='%s'"%(table_name, ID)
+        else:
+            raise RuntimeError('Index or ID has to be provide.')
         self.cursor.execute(query)
         response = self.cursor.fetchall()
         return response
+
+
 
     def load_image_list_file(self, table_name, filename, field_spe, line_sep,
                              colnames):
@@ -64,14 +154,6 @@ class image_database(DataBase): # API to interact with database
             query += "%s,"%cn
         query = query[:-1]+ ")"
         self.cursor.execute(query)
-
-
-
-    def search_image(self, table_name, image_ID):
-        query = "SELECT * FROM " + table_name + " WHERE image_ID = %s"
-        self.cursor.execute(query, (image_ID,))
-        response = self.cursor.fetchall()
-        return response
 
     def delete_image(self ,table_name, image_ID=None, index=None):
         if id is None:
@@ -94,15 +176,11 @@ class image_database(DataBase): # API to interact with database
                      "VALUES (%s)")
         self.cursor.execute(add_image, (img_id,))
 
-    def get_all_users(self, table_name):
+    def get_all_rating(self, table_name, image_id):
         """Get all users from data table
         """
-        col_name = self.get_table_keys(table_name)
-        users = []
-        for col in col_name:
-            colkey = col[0]
-            if colkey not in self.table_default_columns['category']:
-                users.append(colkey)
+        ratings = self.get_table_row(table_name, "image_id='%s'"%image_id)
+        print ratings
         return users
 
     def get_final_result(self, table_name,img_id):

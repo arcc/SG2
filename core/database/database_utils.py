@@ -67,6 +67,13 @@ class DataBase(object): # API to interact with database
         else:
             print "OK"
             return "OK"
+    def is_empty(self, tablename):
+        query = "SELECT 1 FROM %s LIMIT 1" % tablename
+        self.cursor.execute(query)
+        response = self.cursor.fetchall()
+        if response==[]:
+            return True
+        return False
 
     def get_table_keys(self, table_name):
         self.cursor.execute('SHOW COLUMNS FROM %s'%table_name)
@@ -129,7 +136,6 @@ class DataBase(object): # API to interact with database
         col : dict
             Column name ane column value
         """
-        #"VALUES (%(emp_no)s, %(salary)s, %(from_date)s, %(to_date)s)"
         coln = " ("
         colv = "("
         for key in col.keys():
@@ -141,6 +147,16 @@ class DataBase(object): # API to interact with database
                      "VALUES " + colv)
         self.cursor.execute(query, col)
 
+    def add_rows(self, table_name, colname, values):
+        coln = " ("
+        colv = "("
+        for key in colname:
+            coln += key + ","
+            colv += "%s,"
+        coln = coln[:-1] + ") "
+        colv = colv[:-1] + ") "
+        query = ("""INSERT INTO %s %s VALUES %s"""%(table_name, coln, colv))
+        self.cursor.executemany(query,values)
 
     def update_element(self, tablename, column, condition, value):
         query = ("UPDATE %s SET %s = '%s' "
@@ -148,7 +164,15 @@ class DataBase(object): # API to interact with database
         self.cursor.execute(query)
 
     def get_table_element(self, table_name, colname, condition):
+        if self.is_empty(table_name):
+            return []
         query = "SELECT %s FROM %s WHERE %s "%(colname, table_name, condition)
+        self.cursor.execute(query)
+        response = self.cursor.fetchall()
+        return response
+
+    def get_table_last_row(self, table_name, sort_key, colname='*'):
+        query = "SELECT %s FROM %s ORDER BY %s DESC LIMIT 1"%(colname, table_name, sort_key)
         self.cursor.execute(query)
         response = self.cursor.fetchall()
         return response

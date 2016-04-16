@@ -15,57 +15,64 @@ from core.database.sg2_database_utils import image_database
 from core.sg2_users import user as u
 import json
 import sys
+mport get_config as gc
+cf = gc.get_config('config.dat')
 
 
-
-db = image_database(password='root')
-
-def get_next_image_url(username, project_name, index_in_db, max_rate=4):
+db = image_database(user=cf['img_db_usr'], password=cf['img_db_pw'])
+def get_next_image_url(username, index_in_db, projcet_name=''):
     """This is a wrapper funciton for sg2 category php
     Parameter
     ----------
     username : str
         The user name who is categorating sg2 image
-    projcet_name : str
-        The projcet name, which represents the database table name
     index_in_db : int
         The image index in database
-    max_rate :  int
-        The maximum number one picture should be rated
+    projcet_name : str
+        The projcet name, which project you want to select
     Return
     -----------
     JSON dump image url and image index in database
     """
     index_in_db = int(index_in_db)
-    max_rate = int(max_rate)
     user = u.USER(username)
     imc = sg2c.image_category( db, user, project_name)
-    imc.change_data_table(project_name)
-    if index_in_db > imc.total_img_in_table:
-        return json.dumps(('-1', '-1', index_in_db))
+    img_table = 'sg2_image_info'
+    rate_table = 'sg2_image_rate'
+    total_img = imc.database.get_total_num_image(img_table)
+
+    if index_in_db > total_img:
+         return json.dumps(('-1', '-1', index_in_db))
     if index_in_db == 0:
-        index_in_db = 1
-    num_rated = imc.database.get_table_element(project_name, 'number_categoried',
-                                     'image_index=%d'%index_in_db)
-    user_result = imc.database.get_table_element(project_name, username,
-                                     'image_index=%d'%index_in_db)
-    user_result = user_result[0][0]
+         index_in_db = 1
 
-    while num_rated[0][0] >= max_rate or user_result != '':
-        index_in_db += 1
-        if index_in_db > imc.total_img_in_table:
-            return json.dumps(('-1', '-1', index_in_db))
-        num_rated = imc.database.get_table_element(project_name, 'number_categoried',
-                                         'image_index=%d'%index_in_db)
-        user_result = imc.database.get_table_element(project_name, username,
-                                         'image_index=%d'%index_in_db)
-        user_result = user_result[0][0]
+    under_rate_image = imc.database.get_table_element(img_table, 'project, image_ID, '
+                        'number_rated, max_rate, image_index',
+                        'number_rated<max_rate AND image_index>=%d'%index_in_db)
+    if under_rate_image ==[]:
+        return json.dumps(('-1', '-1', index_in_db))
 
-    imc.get_image_from_database(index_in_db)
+    condition = ("SELECT image_index FROM %s WHERE number_rated<max_rate and"
+                 " image_index>=%d")%(img_table, index_in_db)
+
+    user_rated = imc.database.get_table_element(rate_table, 'image_ID',
+                        "rater_name='%s' and info_table_index IN (%s)"%(username, condition))
+    rated = set()
+    under_rated = set()
+    for ur in user_rated:
+        rated.add(ur[0])
+
+    for unimg in under_rate_image:
+        under_rated.add(unimg[1])
+
+    usr_unrate = under_rated.symmetric_difference(rated)
+
+    target_id = list(usr_unrate)[0]
+    result_image_index = imc.database.get_table_element(img_table, 'image_index', "image_ID='%s'"%target_id)[0][0]
+    imc.get_image_from_database(ID=target_id)
     url = imc.current_image.image_url
     url_large = imc.current_image.image_url_large
-    index = imc.current_index
-    return json.dumps((url, url_large, index))
+    return json.dumps((url, url_large, result_image_index))
 
 if __name__== "__main__":
     username = sys.argv[1]
@@ -73,7 +80,6 @@ if __name__== "__main__":
     img_index = int(sys.argv[3])
     if len(sys.argv) >= 5:
         max_rate = int(sys.argv[4])
-        print get_next_image_url(username, project_name, img_index,
-                                 max_rate)
+        print get_next_image_url(username, img_index, project_name)
     else:
-       print get_next_image_url(username, project_name, img_index)
+        print get_next_image_url(username, img_index, project_name)
