@@ -15,7 +15,7 @@ from core.database.sg2_database_utils import image_database
 from core.sg2_users import user as u
 import json
 import sys
-mport get_config as gc
+import get_config as gc
 
 cf = gc.get_config('config.dat')
 db = image_database(user=cf['img_db_usr'], password=cf['img_db_pw'])

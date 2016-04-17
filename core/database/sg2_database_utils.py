@@ -12,7 +12,8 @@ class image_database(DataBase): # API to interact with database
                  unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock'):
                   # right now it is only support localhost via MAMP
         if local:
-            super(image_database, self).__init__(password=password,
+            super(image_database, self).__init__(user=user,
+                                                 password=password,
                                                  database=database)
         else:
             super(image_database, self).__init__(local=loacl, user=user,
@@ -146,7 +147,7 @@ class image_database(DataBase): # API to interact with database
         """
         if not os.path.isfile(filename):
             raise ValueError('Please provide the full path of file '+ filename)
-        query =( "LOAD DATA INFILE '%s'  INTO TABLE %s"
+        query =( "LOAD DATA LOCAL INFILE '%s'  INTO TABLE %s"
                  " FIELDS TERMINATED BY '%s'"
                  " LINES TERMINATED BY '%s'"
                  " ("%(filename, table_name, field_spe, line_sep))

@@ -12,7 +12,8 @@ class users_database(DataBase): # API to interact with database
                  port='8889', database='wordpress',
                  unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock'):
         if local:
-            super(users_database, self).__init__(password=password,
+            super(users_database, self).__init__(user=user,
+                                                 password=password,
                                                  database=database)
         else:
             super(users_database, self).__init__(local=loacl, user=user,
@@ -73,8 +74,7 @@ class users_database(DataBase): # API to interact with database
         result = {'user_index': response[0], 'user_login': response[1],
                   'user_email': response[4], 'user_url': response[5],
                   'user_registered_time': response[6],
-                  'user_status': response[8], 'display_name': response[9],
-                  'last_index': response[10]}
+                  'user_status': response[8], 'display_name': response[9]}
         return result
 
     def create_statistics_tables(self):

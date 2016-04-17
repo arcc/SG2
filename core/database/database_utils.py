@@ -2,18 +2,20 @@
 import mysql.connector
 from mysql.connector import errorcode
 import database_utils as dbut
+from mysql.connector.constants import ClientFlag
 import os.path
 
 class DataBase(object): # API to interact with database
-    def __init__(self, local=True, user='root', password='****', host='localhost',
-                 port='8889', database=None,
-                 unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock'):
+    def __init__(self, local=True, user='root', password='****', host='127.0.0.1',
+                 port=3306, database=None, client_flags=[ClientFlag.LOCAL_FILES],
+                 unix_socket='/var/lib/mysql/mysql.sock'):
 
         self.server_info = {
                             'user': user, 'password': password,
                             'host': host, 'port': port,
                             'unix_socket': unix_socket,
-                            'database': database
+                            'database': database,
+                            'client_flags': [ClientFlag.LOCAL_FILES]
                            }
         self.data_type_sep = {'str': 'varchar(40)',
                               'int': 'INT(20)',

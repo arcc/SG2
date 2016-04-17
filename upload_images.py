@@ -9,7 +9,7 @@ from core.database.sg2_database_utils import image_database
 import sys
 import os
 import datetime
-mport get_config as gc
+import get_config as gc
 cf = gc.get_config('config.dat')
 #Author Jing Luo
 

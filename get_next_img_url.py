@@ -15,12 +15,12 @@ from core.database.sg2_database_utils import image_database
 from core.sg2_users import user as u
 import json
 import sys
-mport get_config as gc
+import get_config as gc
 cf = gc.get_config('config.dat')
 
 
 db = image_database(user=cf['img_db_usr'], password=cf['img_db_pw'])
-def get_next_image_url(username, index_in_db, projcet_name=''):
+def get_next_image_url(username, index_in_db, project_name=''):
     """This is a wrapper funciton for sg2 category php
     Parameter
     ----------
@@ -46,16 +46,15 @@ def get_next_image_url(username, index_in_db, projcet_name=''):
     if index_in_db == 0:
          index_in_db = 1
 
-    under_rate_image = imc.database.get_table_element(img_table, 'project, image_ID, '
-                        'number_rated, max_rate, image_index',
-                        'number_rated<max_rate AND image_index>=%d'%index_in_db)
+    under_rate_image = imc.database.get_table_element(img_table, 'image_index, project, image_ID, '
+                        'number_rated, max_rate', 'number_rated<max_rate AND image_index>=%d'%index_in_db)
     if under_rate_image ==[]:
         return json.dumps(('-1', '-1', index_in_db))
 
     condition = ("SELECT image_index FROM %s WHERE number_rated<max_rate and"
                  " image_index>=%d")%(img_table, index_in_db)
 
-    user_rated = imc.database.get_table_element(rate_table, 'image_ID',
+    user_rated = imc.database.get_table_element(rate_table, 'info_table_index, image_ID',
                         "rater_name='%s' and info_table_index IN (%s)"%(username, condition))
     rated = set()
     under_rated = set()
@@ -63,23 +62,22 @@ def get_next_image_url(username, index_in_db, projcet_name=''):
         rated.add(ur[0])
 
     for unimg in under_rate_image:
-        under_rated.add(unimg[1])
+        under_rated.add(unimg[0])
 
     usr_unrate = under_rated.symmetric_difference(rated)
 
-    target_id = list(usr_unrate)[0]
-    result_image_index = imc.database.get_table_element(img_table, 'image_index', "image_ID='%s'"%target_id)[0][0]
-    imc.get_image_from_database(ID=target_id)
+    target_index = min(list(usr_unrate))
+    #result_image_index = imc.database.get_table_element(img_table, 'image_index', "image_ID='%s'"%target_id)[0][0]
+    imc.get_image_from_database(index=target_index)
     url = imc.current_image.image_url
     url_large = imc.current_image.image_url_large
-    return json.dumps((url, url_large, result_image_index))
+    return json.dumps((url, url_large, target_index))
 
 if __name__== "__main__":
     username = sys.argv[1]
-    project_name = sys.argv[2]
-    img_index = int(sys.argv[3])
-    if len(sys.argv) >= 5:
-        max_rate = int(sys.argv[4])
+    img_index = int(sys.argv[2])
+    if len(sys.argv) >= 4:
+        project_name = sys.argv[3]
         print get_next_image_url(username, img_index, project_name)
     else:
-        print get_next_image_url(username, img_index, project_name)
+        print get_next_image_url(username, img_index)

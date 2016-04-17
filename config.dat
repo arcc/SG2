@@ -1,5 +1,9 @@
 # SG2 config
-user_db_usr root
-user_db_pw root
-img_db_usr root
-img_db_pw root
+img_db sg2
+usr_db wordpress
+user_db_usr wordpress
+user_db_pw B1937+21
+img_db_usr sg2
+img_db_pw B1937+21
+host 127.0.0.1
+
