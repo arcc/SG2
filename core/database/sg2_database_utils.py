@@ -7,19 +7,21 @@ import os.path
 
 
 class image_database(DataBase): # API to interact with database
-    def __init__(self, local=True, user='root', password='****', host='localhost',
-                 port='8889', database='sg2',
-                 unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock'):
-                  # right now it is only support localhost via MAMP
-        if local:
-            super(image_database, self).__init__(user=user,
-                                                 password=password,
-                                                 database=database)
-        else:
-            super(image_database, self).__init__(local=loacl, user=user,
-                                                 password=password, host=host,
-                                                 port=port, database=database,
-                                                 unix_socket=unix_socket)
+    # def __init__(self, local=True, user='root', password='****', host='localhost',
+    #              port='8889', database='sg2',
+    #              unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock'):
+    #               # right now it is only support localhost via MAMP
+    #     if local:
+    #         super(image_database, self).__init__(user=user,
+    #                                              password=password,
+    #                                              database=database)
+    #     else:
+    #         super(image_database, self).__init__(local=loacl, user=user,
+    #                                              password=password, host=host,
+    #                                              port=port, database=database,
+    #                                              unix_socket=unix_socket)
+    def __init__(self, **login_info):
+        super(image_database, self).__init__(**login_info)
         self.table_template.update({'category':
                            lambda x:( "CREATE TABLE `%s` ("
                              "  `image_index` int(11) NOT NULL AUTO_INCREMENT,"

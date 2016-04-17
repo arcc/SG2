@@ -19,7 +19,7 @@ import get_config as gc
 cf = gc.get_config('config.dat')
 
 
-db = image_database(user=cf['img_db_usr'], password=cf['img_db_pw'])
+db = image_database(**cf['sg2'])
 def get_next_image_url(username, index_in_db, project_name=''):
     """This is a wrapper funciton for sg2 category php
     Parameter

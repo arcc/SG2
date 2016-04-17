@@ -4,10 +4,10 @@ from core.database.users_database_utils import users_database as udb
 import datetime
 import json
 import sys
-mport get_config as gc
+import get_config as gc
 
 cf = gc.get_config('config.dat')
-user_db = udb(user=cf['user_db_usr'], password=cf['user_db_pw'])
+user_db = udb(**cf['wordpress'])
 def update_stat_time(time_unit):
     time_indentifier = {'week':('user_statistics_week','days', 1.0),
                         'day':('user_statistics_day','seconds', 3600.0),

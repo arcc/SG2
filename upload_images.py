@@ -13,7 +13,7 @@ import get_config as gc
 cf = gc.get_config('config.dat')
 #Author Jing Luo
 
-imgdb = image_database(user=cf['img_db_usr'], password=cf['img_db_pw'])
+imgdb = image_database(**cf['sg2'])
 
 if __name__== "__main__":
     filename = sys.argv[1]

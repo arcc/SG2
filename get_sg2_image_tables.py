@@ -10,10 +10,10 @@ from core.sg2_users import user as u
 import json
 import sys
 import argparse
-mport get_config as gc
+import get_config as gc
 
 cf = gc.get_config('config.dat')
-db = image_database(user=cf['img_db_usr'], password=cf['img_db_pw'])
+db = image_database(**cf['sg2'])
 
 def search_projects(keywd = ''):
     sg2_projects = db.get_table_column_data('projects', ['project_name',])[0]

@@ -5,7 +5,7 @@ cf = gc.get_config('config.dat')
 
 #Author Jing Luo
 
-db = users_database(user=cf['user_db_usr'], password=cf['user_db_pw'])
+db = users_database(**cf['wordpress'])
 db.import_user_from_wp_users('user_statistics_day')
 db.import_user_from_wp_users('user_statistics_week')
 db.import_user_from_wp_users('user_statistics_year')

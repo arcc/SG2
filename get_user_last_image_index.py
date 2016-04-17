@@ -16,8 +16,6 @@ import sys
 import get_config as gc
 cf = gc.get_config('config.dat')
 
-db = image_database(user=cf['img_db_usr'], password=cf['img_db_pw'])
-
 def get_last_image_index(username):
     user = u.USER(username)
     condition = "user_name='%s'"%username

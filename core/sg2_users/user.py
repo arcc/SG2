@@ -14,7 +14,7 @@ class USER(object):
         self.num_images_processed = 0
         self.accurate_rate = 0.0
         self.last_ranked_image = 0
-        self.db = users_database(user=cf['user_db_usr'],password=cf['user_db_pw'])
+        self.db = users_database(**cf['wordpress'])
         self.get_user_info(self.name, 'wp_users')
         self.time_unit_type = {'day': ('user_statistics_day', 'Hour'),
                                'week': ('user_statistics_week', 'Day'),

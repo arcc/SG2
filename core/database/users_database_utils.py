@@ -8,18 +8,8 @@ import os.path
 import numpy as np
 
 class users_database(DataBase): # API to interact with database
-    def __init__(self, local=True, user='root', password='****', host='localhost',
-                 port='8889', database='wordpress',
-                 unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock'):
-        if local:
-            super(users_database, self).__init__(user=user,
-                                                 password=password,
-                                                 database=database)
-        else:
-            super(users_database, self).__init__(local=loacl, user=user,
-                                                 password=password, host=host,
-                                                 port=port, database=database,
-                                                 unix_socket=unix_socket)
+    def __init__(self, **login_info):
+        super(users_database, self).__init__(**login_info)
 
         self.table_template.update({'user_statistics_day':
                        lambda x:( "CREATE TABLE `%s` ("
