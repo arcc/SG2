@@ -1,0 +1,21 @@
+import sg2_database_utils as ut
+
+db = ut.image_database()
+db.display_database_info('SHOW TABLES')
+db.creat_table('test','category')
+db.display_database_info('SHOW TABLES')
+#db.delete_table('test')
+#db.display_database_info('SHOW TABLES')
+db.add_image('test','STS113-E-5472')
+#db.add_image('test','STS113-E-5473')
+#db.add_image('test','STS113-E-5474')
+#db.delete_image('test', image_ID='STS113-E-5472')
+#db.delete_image('test', index=8)
+db.cnx.commit()
+print db.search_image('test','STS113-E-5472')
+#db.display_database_info("SELECT * FROM test")
+#db.cursor.execute("SELECT * FROM test")
+#row = db.cursor.fetchone()
+#print type(row[0])
+
+db.close()
