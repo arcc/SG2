@@ -1,5 +1,7 @@
 #!/usr/bin/python
 import os
+from mysql.connector.constants import ClientFlag
+
 def get_config(filename):
     curr_file_path = os.path.abspath(__file__)
     path, pyf = os.path.split(curr_file_path)
@@ -33,6 +35,9 @@ def get_config(filename):
             result_local[reskey] = config[key]
         else:
             result[key] = config[key]
+    for db in result.keys():  # TODO: Need to change here in the futhre. 
+        if 'client_flags' in result[db].keys():
+            result[db]['client_flags'] = [ClientFlag.LOCAL_FILES]
     if local:
         return result_local
     else:
