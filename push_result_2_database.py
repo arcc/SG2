@@ -18,7 +18,7 @@ import sys
 import get_config as gc
 
 cf = gc.get_config('config.dat')
-db = image_database(cf['sg2'])
+db = image_database(**cf['sg2'])
 def push_result(username, index_in_db, category_code, user_specify=''):
     """A function pushes a result to database
     Parameter
