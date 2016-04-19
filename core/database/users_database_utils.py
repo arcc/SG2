@@ -166,7 +166,7 @@ class users_database(DataBase): # API to interact with database
         dtype = self.data_type_sep['int']
         # Rotate column names.
         for name_old, name_new in zip(time_bin, new_colname):
-            query = "alter table %s change %s %s %s"%(datatable,
+            query = "alter table %s change %s %s %s NOT NULL"%(datatable,
                      name_old, name_new, dtype)
             self.cursor.execute(query)
 
