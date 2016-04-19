@@ -16,7 +16,13 @@ for utb in usr_tables:
         usrdb.import_user_from_wp_users(utb)
 usrdb.create_user_last_input_table()
 usrdb.import_user_from_wp_users('user_last_index')
+result = usrdb.get_table_keys('wp_users')
+keys = []
+for key in result:
+    keys.append(key[0])
 
+if 'in_stat' not in keys:
+    usrdb.add_column('wp_users','in_stat', bool, 'display_name')
 
 # setup the image database
 imgdb = image_database(**cf['sg2'])

@@ -28,12 +28,13 @@ def create_user(username):
         raise RuntimeError("Finding user %s's information in wordpress "
                             "database failed." % username)
     # Add statistics table
-    usr_tables = user.db.get_tables()
-    for utb in usr_tables:
-        if utb.startswith('user_statistics'):
-            user.db.add_user_row(utb, userInfo['user_login'])
-    user.db.add_user_row('user_last_index',userInfo['user_login'])
-
+    if int(userInfo['in_stat']) == 0:
+        usr_tables = user.db.get_tables()
+        for utb in usr_tables:
+            if utb.startswith('user_statistics'):
+                user.db.add_user_row(utb, userInfo['user_login'])
+        user.db.add_user_row('user_last_index',userInfo['user_login'])
+        user.db.update_element('wp_users', 'in_stat',"user_login='%s'"%userInfo['user_login'], '1')
     # Author Luo Jing
     user.db.cnx.commit()
     return json.dumps('Ok')
