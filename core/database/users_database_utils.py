@@ -64,7 +64,8 @@ class users_database(DataBase): # API to interact with database
         result = {'user_index': response[0], 'user_login': response[1],
                   'user_email': response[4], 'user_url': response[5],
                   'user_registered_time': response[6],
-                  'user_status': response[8], 'display_name': response[9]}
+                  'user_status': response[8], 'display_name': response[9],
+                  'in_stat': response[10]}
         return result
 
     def create_statistics_tables(self):
@@ -93,7 +94,7 @@ class users_database(DataBase): # API to interact with database
             print "User %s already in the table %s."%(username, tablename)
             return
         else:
-            self.add_row(utb,{'user_name':username})
+            self.add_row(tablename,{'user_name':username})
             return
     def create_user_last_input_table(self):
         self.create_table('user_last_index', 'user_last_index')
