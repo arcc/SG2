@@ -13,6 +13,9 @@ def get_statistics(user_name, time_unit):
     user = u.USER(user_name)
     time_bin_unit = user.time_unit_type[time_unit][1]
     x,y,tu = user.get_user_statistics(user_name, time_unit)
+    for ii, yv in enumerate(y):
+        if yv is None:
+            y[ii] = 0
     now = datetime.datetime.now()
     if time_unit == 'day':
         times = [now+datetime.timedelta(hours=float(h)) for h in x]
