@@ -13,12 +13,16 @@ def get_statistics(user_name, time_unit):
     now = datetime.datetime.now()
     if time_unit == 'day':
         x = range(-23,1)
-        times = [now+datetime.timedelta(hours=float(h)) for h in x]
+        hour_begin = datetime.datetime(now.year, now.month, now.day, now.hour)
+        times = [hour_begin+datetime.timedelta(hours=float(h)) for h in x]
         xlabels = [t.strftime('%I %p') for t in times]
+        times.append(now)
     elif time_unit == 'week':
         x = range(-6,1)
-        times = [now+datetime.timedelta(days=float(d)) for d in x]
+        day_begin = datetime.datetime(now.year, now.month, now.day)
+        times = [day_begin+datetime.timedelta(days=float(d)) for d in x]
         xlabels = [t.strftime('%a %d %b %Y') for t in times]
+        times.append(now)
     elif time_unit == 'year':
         x = range(-51,1)
         day_week = now.weekday()
@@ -26,7 +30,7 @@ def get_statistics(user_name, time_unit):
         week_start = datetime.datetime(monday.year, monday.month, monday.day)
         times = [week_start+datetime.timedelta(days=float(w)*7) for w in x]
         times.append(now)
-        xlabels = [''] * len(times)
+        xlabels = [''] * (len(times)-1)
         current_month = times[0].month
         for ii, t in enumerate(times):
             if t.month != current_month:
