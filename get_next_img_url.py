@@ -65,9 +65,6 @@ def get_next_image_url(username, index_in_db, project_name=''):
         under_rated.add(unimg[0])
 
     usr_unrate = under_rated.symmetric_difference(rated)
-    print rated
-    print under_rated
-    print usr_unrate
     if list(usr_unrate) == []:
         return json.dumps(('-1', '-1', '-1',index_in_db))
     target_index = min(list(usr_unrate))
