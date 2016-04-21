@@ -4,12 +4,21 @@ from core.database.sg2_database_utils import image_database
 from core.sg2_users import user as u
 import json
 import sys
+import get_config as gc
+cf = gc.get_config('config.dat')
 
-db = image_database(password='root')
+db = image_database(**cf['sg2'])
 
-def get_img_from_id(username, project_name, img_id):
-    user = u.USER(username)
-    imc = sg2c.image_category( db, user, project_name)
-    imc.change_data_table(project_name)
-    #TODO write a function in sg2_category to get image form img_id
-    return 0
+def serach_img_from_database_by_id(img_id):
+    img_table = 'sg2_image_info'
+    rate_table = 'sg2_image_rate'
+    img_val = db.get_table_row(img_table, "image_ID='%s'"%img_id)
+    img_key = db.get_table_keys(img_table)
+    image = {}
+    for key, val in zip(img_key, img_val[0]):
+        image[key[0]] = val
+    return image
+
+if __name__== "__main__":
+    id = sys.argv[1]
+    print serach_img_from_database_by_id(id)
