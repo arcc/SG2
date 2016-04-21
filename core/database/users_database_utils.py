@@ -118,26 +118,6 @@ class users_database(DataBase): # API to interact with database
                 self.add_row(datatable,{'user_name': usr})
 
 
-    def get_user_statistics(self, datatable, user_name):
-        condition = "user_name='%s'"%user_name
-        response = self.get_table_row(datatable, condition)
-        if response == []:
-            raise ValueError("Unknown user name %s or unknown database "
-                             "table %s."%(user_name, datatable))
-        data = response[0]
-        keys = self.get_table_keys(datatable)
-        x = []
-        y = []
-        for ii, key in enumerate(keys):
-            keyname = key[0]
-            if keyname in ['user_ID','user_name']:
-                continue
-            if keyname.endswith(('Total','Week','Day','Year')):
-                continue
-            x.append(keyname)
-            y.append(data[ii])
-        return x, y
-
     def update_statistics_time_column(self, datatable, time_blocks=1):
         """This is a function to update statistics data table information by
         time. With a new time block, old time's data will be pushed back.
