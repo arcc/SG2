@@ -71,7 +71,8 @@ def get_next_image_url(username, index_in_db, project_name=''):
     imc.get_image_from_database(index=target_index)
     url = imc.current_image.image_url
     url_large = imc.current_image.image_url_large
-    return json.dumps((url, url_large, target_index))
+    url_page = imc.current_image.page_url
+    return json.dumps((url, url_large, url_page, target_index))
 
 if __name__== "__main__":
     username = sys.argv[1]
