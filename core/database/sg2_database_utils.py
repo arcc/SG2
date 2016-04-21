@@ -191,3 +191,10 @@ class image_database(DataBase): # API to interact with database
         for res in result_int:
             result_str += str(res) + ','
         return result_str
+
+    def get_rate_time(self, datatable, rater_name, time_start, time_end):
+        query = ("SELECT rate_time FROM %s WHERE rater_name='%s' AND")%(datatable, rater_name)
+        query +=" rate_time BETWEEN %s AND %s"
+        self.cursor.execute(query, (time_start, time_end))
+        response = self.cursor.fetchall()
+        return response
