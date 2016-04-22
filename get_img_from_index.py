@@ -9,11 +9,11 @@ cf = gc.get_config('config.dat')
 
 db = image_database(**cf['sg2'])
 
-def serach_img_from_database_by_id(img_id):
+def serach_img_from_database_by_index(index):
     img_table = 'sg2_image_info'
     rate_table = 'sg2_image_rate'
     image = {}
-    img_val = db.get_table_row(img_table, "image_ID='%s'"%img_id)
+    img_val = db.get_table_row(img_table, "image_index='%s'"%index)
     if img_val == []:
         return image
     img_key = db.get_table_keys(img_table)
@@ -23,5 +23,5 @@ def serach_img_from_database_by_id(img_id):
     return image
 
 if __name__== "__main__":
-    id = sys.argv[1]
-    print serach_img_from_database_by_id(id)
+    index = sys.argv[1]
+    print serach_img_from_database_by_index(index)
