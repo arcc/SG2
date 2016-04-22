@@ -54,13 +54,14 @@ if __name__== "__main__":
     imgdb.update_element('sg2_image_info', 'project', condition, project)
     imgdb.update_element('sg2_image_info', 'max_rate', condition, max_rate)
     imgdb.update_element('sg2_image_info', 'time_added', condition, now)
+    imgdb.cnx.commit()
     # Add rows to sg2_image_rate table
-    f = open(filename)
+    up_loads = imgdb.get_table_element('sg2_image_info', 'image_ID, image_index',condition)
+    ids = [ud[0] for ud in up_loads]
+    idxs = [ud[1] for ud in up_loads]
     values = []
-    for ii,line in enumerate(f.readlines()):
-        if not line.startswith('#'):
-            imgid = line.split()[0]
-            values += [(imgid, project_start_index+ii)]* max_rate
+    for idx, im_id in zip(idxs, ids):
+        values += [(im_id, idx)]* max_rate
     imgdb.add_rows('sg2_image_rate',('image_ID','info_table_index'), values)
     imgdb.cnx.commit()
     imgdb.cnx.close()
