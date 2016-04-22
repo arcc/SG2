@@ -74,7 +74,8 @@ class image_database(DataBase): # API to interact with database
                              "  `other_category` varchar(40) NOT NULL,"
                              "  `time_finished` TIMESTAMP DEFAULT 0,"
                              "  `quality_control` TINYINT(1) NOT NULL,"
-                             "  PRIMARY KEY (`image_index`)"
+                             "  PRIMARY KEY (`image_index`),"
+                             "  UNIQUE KEY `image_ID` (`image_ID`)"
                              ") ENGINE=InnoDB")%x,
                               })
 
@@ -136,7 +137,7 @@ class image_database(DataBase): # API to interact with database
         """
         if not os.path.isfile(filename):
             raise ValueError('Please provide the full path of file '+ filename)
-        query =( "LOAD DATA LOCAL INFILE '%s'  INTO TABLE %s"
+        query =( "LOAD DATA LOCAL INFILE '%s' IGNORE INTO TABLE %s"
                  " FIELDS TERMINATED BY '%s'"
                  " LINES TERMINATED BY '%s'"
                  " ("%(filename, table_name, field_spe, line_sep))
