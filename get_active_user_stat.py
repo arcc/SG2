@@ -25,14 +25,20 @@ def get_user_stat(time_unit):
     else:
         raise ValueError("Unknow time unit.")
     # setup user list
-    users_result = user_db.get_table_element('wp_users', 'user_login', "user_activation_key=''")
-    result = {}
+    users_result = user_db.get_table_element('wp_users', 'user_login, display_name', "user_activation_key=''")
+    result = []
     for user in users_result:
         if user[0]=='':
             continue
         db_result = img_db.get_rate_time('sg2_image_rate', user[0], time_start, now)
-        result[user[0]] = len(db_result)
-    print json.dumps((result, time_start.strftime('%a %d %b %Y %I %p'), now.strftime('%a %d %b %Y %I %p')))
+        display_name = user[1].split()
+        if len(display_name)<2:
+            display_name.append('')
+        first_name = display_name[0]
+        last_name = display_name[1]
+        result.append((user[0], display_name[0], display_name[1], len(db_result)))
+    result_sort = sorted(result, key = lambda x: (x[1], x[2]))
+    return json.dumps((result_sort, time_start.strftime('%a %d %b %Y %I %p'), now.strftime('%a %d %b %Y %I %p')))
 
 if __name__== "__main__":
     timeu = sys.argv[1]
