@@ -37,7 +37,7 @@ def get_user_stat(time_unit):
         first_name = display_name[0]
         last_name = display_name[1]
         result.append((user[0], display_name[0], display_name[1], len(db_result)))
-    result_sort = sorted(result, key = lambda x: (x[1], x[2]))
+    result_sort = sorted(result, key = lambda x: (x[1].lower(), x[2].lower))
     return json.dumps((result_sort, time_start.strftime('%a %d %b %Y %I %p'), now.strftime('%a %d %b %Y %I %p')))
 
 if __name__== "__main__":
