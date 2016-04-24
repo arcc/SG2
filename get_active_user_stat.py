@@ -15,7 +15,7 @@ def get_user_stat(time_unit):
     now = datetime.datetime.now()
     # setup time stemp
     if time_unit == 'day':
-        time_start = ndatetime.datetime(now.year, now.month, now.day, now.hour-1)
+        time_start = datetime.datetime(now.year, now.month, now.day, now.hour-1)
     elif time_unit == 'week':
         time_start = datetime.datetime(now.year, now.month, now.day)+ datetime.timedelta(days=float(-7))
     elif time_unit == 'month':
